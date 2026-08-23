@@ -8,11 +8,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: none;
-  border-radius: 18px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
   padding: 16px 32px 16px 18px;
-  background: rgba(255, 249, 240, 0.95);
-  box-shadow: inset 0 0 0 1px rgba(255, 138, 65, 0.18);
+  background: #ffffff;
   font-size: 15px;
   color: var(--color-text-strong);
   cursor: pointer;
@@ -41,9 +40,10 @@
   width: 100%;
   max-height: 240px;
   overflow: auto;
-  border-radius: 16px;
+  border-radius: 6px;
   background: var(--color-surface);
-  box-shadow: 0 16px 40px rgba(26, 26, 44, 0.12), inset 0 0 0 1px var(--color-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ebebeb;
   z-index: 20;
 }
 
@@ -56,7 +56,7 @@
 
 .option:hover,
 .optionActive {
-  background: var(--color-secondary);
+  background: #e6f4ff;
   color: var(--color-text-strong);
 }
 

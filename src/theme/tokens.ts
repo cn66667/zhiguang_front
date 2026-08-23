@@ -1,31 +1,31 @@
 export const colors = {
-  primary: "#ff8a41",
-  primaryStrong: "#ff7a22",
-  primaryLight: "#ffe1bf",
-  primarySoft: "#fff2e1",
+  primary: "#0084ff",
+  primaryStrong: "#0066cc",
+  primaryLight: "#e6f4ff",
+  primarySoft: "#e6f4ff",
   success: "#12c07b",
   info: "#4b85f1",
   surface: "#ffffff",
-  surfaceSoft: "#fff6ea",
-  surfaceMuted: "#fff0de",
-  textStrong: "#1f1f33",
-  text: "#3a3a4a",
-  textMuted: "#76768a",
-  border: "rgba(255, 163, 88, 0.3)",
-  divider: "rgba(31, 31, 51, 0.08)"
+  surfaceSoft: "#f6f6f6",
+  surfaceMuted: "#f2f2f2",
+  textStrong: "#1a1a1a",
+  text: "#333333",
+  textMuted: "#8590a6",
+  border: "rgba(0, 0, 0, 0.08)",
+  divider: "#ebebeb"
 };
 
 export const radii = {
-  xs: "8px",
-  sm: "12px",
-  md: "16px",
-  lg: "24px",
-  xl: "32px"
+  xs: "2px",
+  sm: "4px",
+  md: "6px",
+  lg: "8px",
+  xl: "10px"
 };
 
 export const shadows = {
-  card: "0 16px 42px rgba(26, 26, 44, 0.08)",
-  soft: "0 14px 32px rgba(255, 138, 65, 0.18)"
+  card: "0 1px 3px rgba(0, 0, 0, 0.04)",
+  soft: "0 1px 3px rgba(0, 0, 0, 0.04)"
 };
 
 export const layout = {

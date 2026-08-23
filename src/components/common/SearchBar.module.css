@@ -3,9 +3,9 @@
   align-items: center;
   gap: 12px;
   padding: 12px 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: inset 0 0 0 1px rgba(255, 138, 65, 0.2);
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #ebebeb;
   color: var(--color-text-muted);
   width: 100%;
   position: relative;
@@ -26,18 +26,17 @@
 
 .button {
   padding: 10px 20px;
-  border-radius: 999px;
-  background: var(--color-primary-strong);
-  color: #fff;
+  border-radius: 4px;
+  background: var(--color-primary);
+  color: #ffffff;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(255, 138, 65, 0.22);
+  background: var(--color-primary-strong);
 }
 
 /* 联想抽屉下拉 */
@@ -46,9 +45,9 @@
   left: 0;
   top: calc(100% + 8px);
   width: 100%;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 18px 42px rgba(26, 26, 44, 0.1);
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   max-height: 360px;
   overflow-y: auto;
