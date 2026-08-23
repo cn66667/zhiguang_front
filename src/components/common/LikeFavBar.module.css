@@ -20,7 +20,7 @@
 
 .btn:hover { color: var(--color-text); }
 
-.liked { color: #e74c3c; }
+.liked { color: #0084ff; }
 .faved { color: var(--color-primary-strong); }
 
 .count {

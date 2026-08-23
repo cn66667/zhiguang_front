@@ -3,9 +3,9 @@
   flex-direction: column;
   gap: 32px;
   padding: 32px;
-  border-radius: 32px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 18px 42px rgba(255, 138, 65, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #ebebeb;
 }
 
 .formGrid {
@@ -39,7 +39,7 @@
   width: 40px;
   height: 22px;
   border-radius: 999px;
-  background: rgba(255, 138, 65, 0.35);
+  background: rgba(0, 0, 0, 0.18);
   cursor: pointer;
 }
 
@@ -49,14 +49,13 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #fff;
+  background: #ffffff;
   top: 3px;
   left: 4px;
-  box-shadow: 0 6px 16px rgba(255, 138, 65, 0.28);
 }
 
 .inlineSwitchOn {
-  background: rgba(255, 138, 65, 0.85);
+  background: #0084ff;
 }
 .inlineSwitchOn::after {
   left: 20px;
@@ -70,11 +69,10 @@
 .input,
 .select,
 .textarea {
-  border: none;
-  border-radius: 18px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
   padding: 16px 18px;
-  background: rgba(255, 249, 240, 0.9);
-  box-shadow: inset 0 0 0 1px rgba(255, 138, 65, 0.18);
+  background: #ffffff;
   font-size: 15px;
   color: var(--color-text-strong);
   resize: vertical;
@@ -86,7 +84,7 @@
   -webkit-appearance: none;
   appearance: none;
   /* 使用主题主色的自定义箭头 */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ff8a41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230084ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 14px;
@@ -98,9 +96,9 @@
 }
 
 .uploadBox {
-  border-radius: 20px;
-  background: rgba(255, 242, 225, 0.7);
-  border: 2px dashed rgba(255, 169, 88, 0.4);
+  border-radius: 6px;
+  background: #f6f6f6;
+  border: 2px dashed #ebebeb;
   padding: 36px;
   display: flex;
   flex-direction: column;
@@ -124,8 +122,8 @@
   aspect-ratio: 3 / 4; /* 宽:高 = 3:4 */
   height: auto;
   object-fit: cover;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 1px rgba(255, 138, 65, 0.18);
+  border-radius: 4px;
+  border: 1px solid #ebebeb;
 }
 
 .toggle {
@@ -133,8 +131,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 24px;
-  background: rgba(255, 242, 225, 0.9);
-  border-radius: 20px;
+  background: #f6f6f6;
+  border-radius: 6px;
   color: var(--color-text-muted);
 }
 
@@ -143,7 +141,7 @@
   width: 52px;
   height: 28px;
   border-radius: 999px;
-  background: rgba(255, 138, 65, 0.35);
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .switch::after {
@@ -152,14 +150,13 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #fff;
+  background: #ffffff;
   top: 3px;
   left: 4px;
-  box-shadow: 0 6px 16px rgba(255, 138, 65, 0.28);
 }
 
 .switchOn {
-  background: rgba(255, 138, 65, 0.85);
+  background: #0084ff;
 }
 .switchOn::after {
   left: 26px;
@@ -173,13 +170,12 @@
 .submit {
   padding: 14px 32px;
   border: none;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ff9a54 0%, #ff7a22 100%);
-  color: #fff;
+  border-radius: 4px;
+  background: #0084ff;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 18px 42px rgba(255, 120, 54, 0.28);
 }
 
 .fullWidth {
@@ -235,7 +231,7 @@
 .previewImage {
   max-width: 90vw;
   max-height: 90vh;
-  border-radius: 12px;
+  border-radius: 4px;
   box-shadow: 0 20px 48px rgba(0,0,0,0.35);
 }
 

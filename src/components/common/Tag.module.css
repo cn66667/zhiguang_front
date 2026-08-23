@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: center;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   color: var(--color-primary-strong);
-  background: rgba(255, 169, 88, 0.18);
+  background: #e6f4ff;
 }
 
 .toneSuccess {
