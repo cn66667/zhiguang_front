@@ -122,6 +122,48 @@ a {
   }
 }
 
+.nickname-decor-rainbow {
+  background: linear-gradient(90deg, #ff4d4f, #fa8c16, #fadb14, #52c41a, #13c2c2, #1677ff, #722ed1);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: nickname-rainbow-flow 3s linear infinite;
+}
+
+@keyframes nickname-rainbow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+.nickname-decor-gold {
+  background: linear-gradient(90deg, #b8860b, #ffd700, #fff2b2, #ffd700, #b8860b);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: nickname-gold-flow 2.5s ease-in-out infinite;
+}
+
+@keyframes nickname-gold-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.nickname-decor-red {
+  color: #f5222d;
+}
+
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;

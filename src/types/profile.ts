@@ -2,6 +2,7 @@ export type Gender = "MALE" | "FEMALE" | "OTHER" | "UNKNOWN";
 
 export type ProfileUpdateRequest = {
   nickname?: string;
+  nicknameDecor?: string;
   bio?: string;
   zgId?: string;
   gender?: Gender;
@@ -15,6 +16,7 @@ export type ProfileUpdateRequest = {
 export type ProfileResponse = {
   id: number;
   nickname: string;
+  nicknameDecor?: string;
   avatar: string;
   bio?: string;
   zgId?: string;

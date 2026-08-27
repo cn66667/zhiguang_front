@@ -117,3 +117,224 @@
 .selectCompact :global(.label) {
   margin-bottom: 0; /* 由 .field 的 gap 控制间距 */
 }
+
+.successOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.successDialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 320px;
+  padding: 40px 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #0084ff;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.successTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.successText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.successButton {
+  margin-top: 8px;
+  padding: 10px 36px;
+  border: none;
+  border-radius: 4px;
+  background: #0084ff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.successButton:hover {
+  background: #0066cc;
+}
+
+.selectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 14px;
+  color: var(--color-text-strong);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.selectTrigger:hover {
+  border-color: #0084ff;
+}
+
+.selectPlaceholder {
+  color: var(--color-text-muted);
+}
+
+.selectValue {
+  color: var(--color-text-strong);
+}
+
+.selectArrow {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.decorGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.decorOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 96px;
+  padding: 12px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.decorOption:hover {
+  border-color: #0084ff;
+}
+
+.decorOptionActive {
+  border-color: #0084ff;
+  background: #e6f4ff;
+}
+
+.decorOptionLabel {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.pickerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.pickerDialog {
+  width: 320px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pickerTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-strong);
+  text-align: center;
+}
+
+.pickerOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pickerOption {
+  height: 44px;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--color-text);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.pickerOption:hover {
+  border-color: #0084ff;
+}
+
+.pickerOptionActive {
+  border-color: #0084ff;
+  background: #e6f4ff;
+  color: #0084ff;
+  font-weight: 600;
+}
+
+.pickerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.pickerCancel {
+  flex: 1;
+  height: 40px;
+  border: 1px solid #ebebeb;
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--color-text);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.pickerCancel:hover {
+  background: #f6f6f6;
+}
+
+.pickerConfirm {
+  flex: 1;
+  height: 40px;
+  border: none;
+  border-radius: 4px;
+  background: #0084ff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pickerConfirm:hover {
+  background: #0066cc;
+}

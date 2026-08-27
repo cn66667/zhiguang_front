@@ -3,6 +3,7 @@ import styles from "./RelationListModal.module.css";
 import { relationService } from "@/services/relationService";
 import { useAuth } from "@/context/AuthContext";
 import type { ProfileResponse } from "@/types/profile";
+import { nicknameDecorClass } from "@/utils/nicknameDecor";
 
 type Mode = "following" | "followers";
 
@@ -103,7 +104,7 @@ const RelationListModal = ({ open, onClose, userId, mode }: RelationListModalPro
                   ) : (
                     <div className={styles._avatar_1q1ln_69}>{initialChar(p.nickname, p.id)}</div>
                   )}
-                  <div className={styles._name_1q1ln_80}>{p.nickname || "知光用户"}</div>
+                  <div className={`${styles._name_1q1ln_80} ${nicknameDecorClass(p.nicknameDecor)}`}>{p.nickname || "知光用户"}</div>
                 </div>
               ))}
             </div>

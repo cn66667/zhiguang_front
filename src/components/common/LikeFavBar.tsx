@@ -132,7 +132,7 @@ const LikeFavBar = ({
         aria-pressed={liked}
         aria-label={liked ? "取消点赞" : "点赞"}
       >
-        <HeartIcon width={iconSize} height={iconSize} />
+        <HeartIcon width={iconSize} height={iconSize} fill={liked ? "currentColor" : "none"} />
         <span className={styles.count}>{likeCount}</span>
       </button>
       <button
@@ -142,7 +142,7 @@ const LikeFavBar = ({
         aria-pressed={faved}
         aria-label={faved ? "取消收藏" : "收藏"}
       >
-        <BookmarkIcon width={iconSize} height={iconSize} />
+        <BookmarkIcon width={iconSize} height={iconSize} fill={faved ? "currentColor" : "none"} />
         <span className={styles.count}>{favCount}</span>
       </button>
     </div>

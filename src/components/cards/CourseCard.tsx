@@ -7,6 +7,7 @@ import { HeartIcon } from "@/components/icons/Icon";
 import { useAuth } from "@/context/AuthContext";
 import { knowpostService } from "@/services/knowpostService";
 import type { KnowpostDetailResponse, VisibleScope } from "@/types/knowpost";
+import { nicknameDecorClass } from "@/utils/nicknameDecor";
 import styles from "./CourseCard.module.css";
 
 const renderEmHighlightedText = (text: string): ReactNode => {
@@ -41,6 +42,7 @@ export type CourseCardProps = {
     name: string;
     avatarText?: string;
     avatarUrl?: string;
+    decor?: string;
   };
   stats?: {
     likes: number;
@@ -216,7 +218,7 @@ const CourseCard = ({
             <div className={styles.teacherAvatar}>{teacher.avatarText ?? (teacher.name?.charAt(0) || "?")}</div>
           )}
           <div className={styles.teacherInfo}>
-            <span className={styles.teacherName}>{teacher.name}</span>
+            <span className={`${styles.teacherName} ${nicknameDecorClass(teacher.decor)}`}>{teacher.name}</span>
             {authorTags?.length ? (
               <div className={styles.authorTags}>
                 {authorTags.map(tag => (
