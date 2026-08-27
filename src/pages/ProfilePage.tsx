@@ -11,6 +11,7 @@ import CourseCard from "@/components/cards/CourseCard";
 import LikeFavBar from "@/components/common/LikeFavBar";
 import { knowpostService } from "@/services/knowpostService";
 import RelationCounters from "@/components/common/RelationCounters";
+import { nicknameDecorClass } from "@/utils/nicknameDecor";
 
 const ProfilePage = () => {
   const { user, tokens } = useAuth();
@@ -44,6 +45,7 @@ const ProfilePage = () => {
     authorAvatar?: string;
     authorAvator?: string;
     authorNickname: string;
+    authorNicknameDecor?: string;
     likeCount?: number;
     favoriteCount?: number;
     liked?: boolean;
@@ -103,7 +105,7 @@ const ProfilePage = () => {
             )}
           </div>
           <div className={styles.infoBox}>
-            <div className={styles.nickname}>{displayName}</div>
+            <div className={`${styles.nickname} ${nicknameDecorClass(user?.nicknameDecor)}`}>{displayName}</div>
             <div className={styles.tags}>
               {tags.length > 0 ? (
                 tags.map(tag => <span key={tag}>{tag}</span>)
@@ -143,7 +145,7 @@ const ProfilePage = () => {
                       return [];
                     }
                   })()}
-                  teacher={{ name: item.authorNickname, avatarUrl: item.authorAvatar ?? item.authorAvator }}
+                  teacher={{ name: item.authorNickname, avatarUrl: item.authorAvatar ?? item.authorAvator, decor: item.authorNicknameDecor }}
                   coverImage={item.coverImage}
                   to={`/post/${item.id}`}
                   editable

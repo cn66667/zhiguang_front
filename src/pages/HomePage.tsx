@@ -18,6 +18,7 @@ const HomePage = () => {
     authorAvatar?: string;
     authorAvator?: string;
     authorNickname: string;
+    authorNicknameDecor?: string;
     likeCount?: number;
     favoriteCount?: number;
     liked?: boolean;
@@ -74,7 +75,7 @@ const HomePage = () => {
                   return [];
                 }
               })()}
-              teacher={{ name: item.authorNickname, avatarUrl: item.authorAvatar ?? item.authorAvator }}
+              teacher={{ name: item.authorNickname, avatarUrl: item.authorAvatar ?? item.authorAvator, decor: item.authorNicknameDecor }}
               coverImage={item.coverImage}
                 to={`/post/${item.id}`}
               footerExtra={<LikeFavBar entityId={item.id} compact initialCounts={{ like: item.likeCount ?? 0, fav: item.favoriteCount ?? 0 }} initialState={{ liked: item.liked, faved: item.faved }} />}

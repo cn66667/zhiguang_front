@@ -8,10 +8,17 @@ import { useAuth } from "@/context/AuthContext";
 import { profileService } from "@/services/profileService";
 import { authService } from "@/services/authService";
 import type { Gender, ProfileUpdateRequest } from "@/types/profile";
+import { DECOR_OPTIONS, nicknameDecorClass, type NicknameDecor } from "@/utils/nicknameDecor";
 import styles from "./EditProfilePage.module.css";
 import { useNavigate } from "react-router-dom";
 
-// 性别文本输入，仅允许“男/女”
+// 性别选择器选项：男/女/保密
+const GENDER_OPTIONS: { label: string; value: Gender }[] = [
+  { label: "男", value: "MALE" },
+  { label: "女", value: "FEMALE" },
+  { label: "保密", value: "UNKNOWN" },
+];
+const genderLabel = (g: Gender | "") => GENDER_OPTIONS.find((o) => o.value === g)?.label ?? "请选择";
 
 const EditProfilePage = () => {
   const { user, tokens, /* refresh, logout, */ reloadUser } = useAuth();
@@ -22,16 +29,19 @@ const EditProfilePage = () => {
   );
 
   const [nickname, setNickname] = useState<string>(user?.nickname ?? "");
+  const [nicknameDecor, setNicknameDecor] = useState<NicknameDecor>("none");
   const [bio, setBio] = useState<string>(user?.bio ?? "");
   const [zgId, setZgId] = useState<string>(user?.zhId ?? "");
-  const [genderText, setGenderText] = useState<string>("");
-  const [genderError, setGenderError] = useState<string>("");
+  const [gender, setGender] = useState<Gender | "">("");
+  const [genderPickerOpen, setGenderPickerOpen] = useState<boolean>(false);
+  const [tempGender, setTempGender] = useState<Gender | "">("");
   const [birthday, setBirthday] = useState<string>(user?.birthday ?? "");
   const [school, setSchool] = useState<string>(user?.school ?? "");
   const [phone, setPhone] = useState<string>(user?.phone ?? "");
   const [skills, setSkills] = useState<string[]>(user?.skills ?? []);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string>("");
+  const [showSaveSuccess, setShowSaveSuccess] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.avatar ?? null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -67,10 +77,11 @@ const EditProfilePage = () => {
     setSaveMessage("");
     const payload: ProfileUpdateRequest = {};
     if (nickname.trim()) payload.nickname = nickname.trim();
+    if (nicknameDecor) payload.nicknameDecor = nicknameDecor;
     if (bio.trim()) payload.bio = bio.trim();
     if (zgId.trim()) payload.zgId = zgId.trim();
     const genderNormalized: Gender | undefined =
-      genderText === "男" ? "MALE" : genderText === "女" ? "FEMALE" : undefined;
+      gender === "MALE" || gender === "FEMALE" || gender === "UNKNOWN" ? gender : undefined;
     if (genderNormalized) payload.gender = genderNormalized;
     if (birthday.trim()) payload.birthday = birthday.trim();
     if (school.trim()) payload.school = school.trim();
@@ -80,6 +91,7 @@ const EditProfilePage = () => {
     try {
       await profileService.update(payload);
       setSaveMessage("资料已保存");
+      setShowSaveSuccess(true);
       // 保存成功后，同步更新全局用户信息，返回“我的”页面可立即看到最新数据
       try {
         await reloadUser?.();
@@ -103,16 +115,18 @@ const EditProfilePage = () => {
         const current = await authService.fetchCurrentUser(tokens.accessToken);
         if (cancelled) return;
         setNickname(current.nickname ?? "");
+        const decor = current.nicknameDecor === "rainbow" || current.nicknameDecor === "gold" || current.nicknameDecor === "red" ? current.nicknameDecor : "none";
+        setNicknameDecor(decor);
         setBio(current.bio ?? "");
         setZgId(current.zhId ?? "");
         setPhone(current.phone ?? "");
         setSchool(current.school ?? "");
         setBirthday(current.birthday ?? "");
         setAvatarUrl(current.avatar || null);
-        if (current.gender === "MALE") setGenderText("男");
-        else if (current.gender === "FEMALE") setGenderText("女");
-        else setGenderText("");
-        setGenderError("");
+        if (current.gender === "MALE") setGender("MALE");
+        else if (current.gender === "FEMALE") setGender("FEMALE");
+        else if (current.gender === "OTHER" || current.gender === "UNKNOWN") setGender("UNKNOWN");
+        else setGender("");
         if (Array.isArray(current.skills)) setSkills(current.skills);
         else if (typeof current.tagJson === "string") {
           try {
@@ -137,10 +151,11 @@ const EditProfilePage = () => {
   useEffect(() => {
     if (!tokens?.accessToken || !user) {
       setNickname("");
+      setNicknameDecor("none");
       setBio("");
       setZgId("");
-      setGenderText("");
-      setGenderError("");
+      setGender("");
+      setGenderPickerOpen(false);
       setBirthday("");
       setSchool("");
       setPhone("");
@@ -189,6 +204,22 @@ const EditProfilePage = () => {
               <label className={styles.label} htmlFor="nickname">昵称</label>
               <input id="nickname" className={styles.input} value={nickname} onChange={e => setNickname(e.target.value)} placeholder="填写你的昵称" />
             </div>
+            <div className={`${styles.field} ${styles.fullWidth}`}>
+              <label className={styles.label}>昵称装饰</label>
+              <div className={styles.decorGroup}>
+                {DECOR_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`${styles.decorOption} ${nicknameDecor === opt.value ? styles.decorOptionActive : ""}`}
+                    onClick={() => setNicknameDecor(opt.value)}
+                  >
+                    <span className={nicknameDecorClass(opt.value)}>{nickname.trim() || "你的昵称"}</span>
+                    <span className={styles.decorOptionLabel}>{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="phone">手机</label>
               <input id="phone" className={styles.input} value={phone} onChange={e => setPhone(e.target.value)} placeholder="绑定手机号方便联系" />
@@ -199,22 +230,20 @@ const EditProfilePage = () => {
             </div>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="gender">性别</label>
-              <input
+              <button
+                type="button"
                 id="gender"
-                className={styles.input}
-                value={genderText}
-                onChange={e => {
-                  const val = e.target.value.trim();
-                  setGenderText(val);
-                  if (!val || val === "男" || val === "女") {
-                    setGenderError("");
-                  } else {
-                    setGenderError("性别仅支持“男”或“女”");
-                  }
+                className={styles.selectTrigger}
+                onClick={() => {
+                  setTempGender(gender);
+                  setGenderPickerOpen(true);
                 }}
-                placeholder="请输入 男 或 女"
-              />
-              {genderError ? <span className={styles.errorMessage}>{genderError}</span> : null}
+              >
+                <span className={gender ? styles.selectValue : styles.selectPlaceholder}>
+                  {gender ? genderLabel(gender) : "请选择"}
+                </span>
+                <span className={styles.selectArrow}>▾</span>
+              </button>
             </div>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="birthday">生日</label>
@@ -239,6 +268,52 @@ const EditProfilePage = () => {
           {saveMessage ? <span style={{ color: "var(--color-primary-strong)" }}>{saveMessage}</span> : null}
         </div>
       </form>
+      {genderPickerOpen ? (
+        <div className={styles.pickerOverlay} onClick={() => setGenderPickerOpen(false)}>
+          <div className={styles.pickerDialog} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.pickerTitle}>选择性别</div>
+            <div className={styles.pickerOptions}>
+              {GENDER_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`${styles.pickerOption} ${tempGender === opt.value ? styles.pickerOptionActive : ""}`}
+                  onClick={() => setTempGender(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            <div className={styles.pickerActions}>
+              <button type="button" className={styles.pickerCancel} onClick={() => setGenderPickerOpen(false)}>
+                取消
+              </button>
+              <button
+                type="button"
+                className={styles.pickerConfirm}
+                onClick={() => {
+                  setGender(tempGender);
+                  setGenderPickerOpen(false);
+                }}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {showSaveSuccess ? (
+        <div className={styles.successOverlay}>
+          <div className={styles.successDialog}>
+            <div className={styles.successIcon}>✓</div>
+            <div className={styles.successTitle}>保存成功</div>
+            <div className={styles.successText}>你的资料已更新</div>
+            <button type="button" className={styles.successButton} onClick={() => navigate("/profile")}>
+              返回我的主页
+            </button>
+          </div>
+        </div>
+      ) : null}
     </AppLayout>
   );
 };

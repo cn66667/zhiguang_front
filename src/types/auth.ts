@@ -28,6 +28,7 @@ import type { Gender } from "@/types/profile";
 export type AuthUserResponse = {
   id: number;
   nickname: string;
+  nicknameDecor?: string;
   avatar: string;
   phone: string;
   email?: string;

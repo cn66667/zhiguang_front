@@ -46,6 +46,7 @@ export type FeedItem = {
   authorAvatar?: string; // 后端字段名为 authorAvatar
   authorAvator?: string; // 兼容历史拼写
   authorNickname: string;
+  authorNicknameDecor?: string;
   likeCount?: number;
   favoriteCount?: number;
   liked?: boolean;
@@ -71,6 +72,7 @@ export type KnowpostDetailResponse = {
   tags: string[];
   authorAvatar?: string;
   authorNickname: string;
+  authorNicknameDecor?: string;
   authorId?: number;
   authorTagJson?: string;
   likeCount: number;

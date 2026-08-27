@@ -9,12 +9,15 @@ type LocationState = {
   from?: string;
 };
 
+const PHONE_PATTERN = /^1[3-9]\d{9}$/;
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isLoading, user } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [code, setCode] = useState("");
+  const [identifierError, setIdentifierError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [sendingCode, setSendingCode] = useState(false);
@@ -56,6 +59,10 @@ const LoginPage = () => {
       setError("请先填写账号信息");
       return;
     }
+    if (!PHONE_PATTERN.test(identifier)) {
+      setIdentifierError("手机号格式不正确");
+      return;
+    }
     setError(null);
     setSendingCode(true);
     try {
@@ -73,7 +80,16 @@ const LoginPage = () => {
     }
   };
 
-  const isDisabled = submitting || !identifier || !code;
+  const isDisabled = submitting || !identifier || !code || !!identifierError;
+
+  const handleIdentifierChange = (value: string) => {
+    setIdentifier(value);
+    if (value && !PHONE_PATTERN.test(value)) {
+      setIdentifierError("手机号格式不正确");
+    } else {
+      setIdentifierError(null);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -94,11 +110,12 @@ const LoginPage = () => {
               id="identifier"
               className={styles.input}
               value={identifier}
-              onChange={event => setIdentifier(event.target.value)}
+              onChange={event => handleIdentifierChange(event.target.value)}
               placeholder="请输入账号"
               type="tel"
               autoComplete="tel"
             />
+            {identifierError ? <span className={styles.fieldError}>{identifierError}</span> : null}
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="code">

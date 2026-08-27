@@ -42,7 +42,7 @@ const AuthStatus = () => {
 
   return (
     <div className={styles.wrapper}>
-      <UserBadge name={displayName} avatarUrl={avatarUrl} />
+      <UserBadge name={displayName} avatarUrl={avatarUrl} decor={user.nicknameDecor} />
       <button type="button" className={styles.logoutButton} onClick={handleLogout}>
         退出
       </button>

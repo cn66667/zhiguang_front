@@ -6,6 +6,8 @@ import type { IdentifierType, RegisterRequest } from "@/types/auth";
 import styles from "./RegisterPage.module.css";
 // 注册方式固定为手机号
 
+const PHONE_PATTERN = /^1[3-9]\d{9}$/;
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,6 +15,7 @@ const RegisterPage = () => {
   const identifierType: IdentifierType = "PHONE";
   const [identifier, setIdentifier] = useState("");
   const [code, setCode] = useState("");
+  const [identifierError, setIdentifierError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -39,6 +42,10 @@ const RegisterPage = () => {
   const handleSendCode = async () => {
     if (!identifier) {
       setError("请先填写账号信息");
+      return;
+    }
+    if (!PHONE_PATTERN.test(identifier)) {
+      setIdentifierError("手机号格式不正确");
       return;
     }
     setError(null);
@@ -88,7 +95,16 @@ const RegisterPage = () => {
     }
   };
 
-  const isDisabled = submitting || !identifier || !code || !password || !agreeTerms;
+  const isDisabled = submitting || !identifier || !code || !password || !agreeTerms || !!identifierError;
+
+  const handleIdentifierChange = (value: string) => {
+    setIdentifier(value);
+    if (value && !PHONE_PATTERN.test(value)) {
+      setIdentifierError("手机号格式不正确");
+    } else {
+      setIdentifierError(null);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -106,11 +122,12 @@ const RegisterPage = () => {
               id="identifier"
               className={styles.input}
               value={identifier}
-              onChange={event => setIdentifier(event.target.value)}
+              onChange={event => handleIdentifierChange(event.target.value)}
               placeholder="请输入账号"
               type="tel"
               autoComplete="tel"
             />
+            {identifierError ? <span className={styles.fieldError}>{identifierError}</span> : null}
           </div>
 
           <div className={styles.field}>

@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import LikeFavBar from "@/components/common/LikeFavBar";
 import FollowButton from "@/components/common/FollowButton";
+import { nicknameDecorClass } from "@/utils/nicknameDecor";
 
 const CourseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,8 @@ const CourseDetailPage = () => {
   const [ragAnswer, setRagAnswer] = useState<string>("");
   const [ragLoading, setRagLoading] = useState<boolean>(false);
   const [ragError, setRagError] = useState<string | null>(null);
-  const ragESRef = useRef<EventSource | null>(null);
+  const [ragErrorDialog, setRagErrorDialog] = useState<{ message: string; isAuth: boolean } | null>(null);
+  const ragAbortRef = useRef<AbortController | null>(null);
   const [ragTopK, setRagTopK] = useState<number>(5);
   const [ragMaxTokens, setRagMaxTokens] = useState<number>(1024);
   // 从头像 URL 推断作者 ID（示例：.../avatars/3-xxxx.jpg → 3）
@@ -143,51 +145,113 @@ const CourseDetailPage = () => {
     setPreviewIndex((i) => (i + 1) % detail.images.length);
   };
 
-  // 启动 RAG 流式问答
-  const startRag = () => {
+  // 启动 RAG 流式问答（改用 fetch 流式读取，便于拿到 401 等错误响应体中的 message）
+  const startRag = async () => {
     if (!id) return;
     const q = ragQuestion.trim();
-    if (!q) return;
+    if (!q) {
+      setRagErrorDialog({ message: "请输入文本", isAuth: false });
+      return;
+    }
     if (detail && detail.visible !== "public") {
       setRagError("仅公开知文支持问答");
       return;
     }
     setRagError(null);
+    setRagErrorDialog(null);
     setRagAnswer("");
     // 关闭之前的连接
-    if (ragESRef.current) {
-      try { ragESRef.current.close(); } catch {}
-      ragESRef.current = null;
+    if (ragAbortRef.current) {
+      try { ragAbortRef.current.abort(); } catch {}
+      ragAbortRef.current = null;
     }
     const url = `/api/v1/knowposts/${id}/qa/stream?question=${encodeURIComponent(q)}&topK=${ragTopK}&maxTokens=${ragMaxTokens}`;
-    const es = new EventSource(url);
-    ragESRef.current = es;
+    const controller = new AbortController();
+    ragAbortRef.current = controller;
     setRagLoading(true);
-    es.onmessage = (e) => {
-      setRagAnswer((prev) => prev + (e.data ?? ""));
-    };
-    es.onerror = () => {
+    try {
+      const headers: Record<string, string> = { Accept: "text/event-stream" };
+      if (tokens?.accessToken) headers.Authorization = `Bearer ${tokens.accessToken}`;
+      const resp = await fetch(url, { headers, signal: controller.signal });
+
+      if (!resp.ok) {
+        // 从响应体读取后端返回的 message 并弹窗展示
+        let message = `请求失败（${resp.status}）`;
+        let isAuth = resp.status === 401 || resp.status === 403;
+        try {
+          const text = await resp.text();
+          if (text) {
+            const trimmed = text.trim();
+            if (trimmed) {
+              try {
+                const parsed = JSON.parse(trimmed);
+                const msg = parsed?.message ?? parsed?.msg ?? parsed?.error ?? parsed?.detail;
+                if (typeof msg === "string" && msg) {
+                  message = msg;
+                }
+              } catch {
+                message = trimmed;
+              }
+            }
+          }
+        } catch {
+          // 忽略读取失败
+        }
+        setRagErrorDialog({ message, isAuth });
+        return;
+      }
+
+      if (!resp.body) {
+        setRagErrorDialog({ message: "响应体为空", isAuth: false });
+        return;
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      // 逐块解析 SSE 数据行
+      const flushLines = (chunk: string) => {
+        buffer += chunk;
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.startsWith("data:")) {
+            const data = trimmed.slice(5).trimStart();
+            if (data) setRagAnswer((prev) => prev + data);
+          }
+        }
+      };
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        flushLines(decoder.decode(value, { stream: true }));
+      }
+      flushLines(decoder.decode());
+    } catch (err) {
+      if ((err as Error)?.name !== "AbortError") {
+        setRagErrorDialog({ message: "连接中断或后端异常", isAuth: false });
+      }
+    } finally {
       setRagLoading(false);
-      // 不展示“连接中断或后端异常”，静默关闭连接
-      try { es.close(); } catch {}
-      ragESRef.current = null;
-    };
+      ragAbortRef.current = null;
+    }
   };
 
   const stopRag = () => {
-    if (ragESRef.current) {
-      try { ragESRef.current.close(); } catch {}
-      ragESRef.current = null;
+    if (ragAbortRef.current) {
+      try { ragAbortRef.current.abort(); } catch {}
+      ragAbortRef.current = null;
     }
     setRagLoading(false);
   };
 
   useEffect(() => {
     return () => {
-      // 页面卸载时关闭 SSE
-      if (ragESRef.current) {
-        try { ragESRef.current.close(); } catch {}
-        ragESRef.current = null;
+      // 页面卸载时中断流式请求
+      if (ragAbortRef.current) {
+        try { ragAbortRef.current.abort(); } catch {}
+        ragAbortRef.current = null;
       }
     };
   }, []);
@@ -229,7 +293,7 @@ const CourseDetailPage = () => {
             {detail?.authorAvatar ? (
               <img className={styles.authorAvatar} src={detail.authorAvatar} alt={detail.authorNickname} />
             ) : null}
-            <span className={styles.authorName}>{detail?.authorNickname ?? ""}</span>
+            <span className={`${styles.authorName} ${nicknameDecorClass(detail?.authorNicknameDecor)}`}>{detail?.authorNickname ?? ""}</span>
             {(() => {
               const derivedId = detail?.authorId ?? parseAvatarUserId(detail?.authorAvatar);
               const isSelf = (derivedId && user?.id === derivedId) || (!!detail?.authorNickname && !!user?.nickname && detail.authorNickname === user.nickname);
@@ -298,7 +362,7 @@ const CourseDetailPage = () => {
                   type="button"
                   className={`${styles.ragBtn} ${styles.ragBtnPrimary}`}
                   onClick={startRag}
-                  disabled={ragLoading || !ragQuestion.trim()}
+                  disabled={ragLoading}
                 >
                   {ragLoading ? "生成中…" : "发送"}
                 </button>
@@ -366,6 +430,29 @@ const CourseDetailPage = () => {
                 <ArrowRightIcon width={24} height={24} />
               </button>
               <button type="button" className={styles.closeButton} onClick={(e) => { e.stopPropagation(); setPreviewOpen(false); }} aria-label="关闭">✕</button>
+            </div>
+          </div>
+        ) : null}
+        {ragErrorDialog ? (
+          <div className={styles.errorDialogOverlay}>
+            <div className={styles.errorDialog}>
+              <button type="button" className={styles.errorDialogClose} onClick={() => setRagErrorDialog(null)} aria-label="关闭">✕</button>
+              <div className={styles.errorDialogIcon}>✕</div>
+              <div className={styles.errorDialogTitle}>提示</div>
+              <div className={styles.errorDialogText}>{ragErrorDialog.message}</div>
+              <button
+                type="button"
+                className={styles.errorDialogButton}
+                onClick={() => {
+                  if (ragErrorDialog.isAuth) {
+                    navigate("/login", { state: { from: `/post/${id}` } });
+                  } else {
+                    setRagErrorDialog(null);
+                  }
+                }}
+              >
+                {ragErrorDialog.isAuth ? "去登录" : "知道了"}
+              </button>
             </div>
           </div>
         ) : null}

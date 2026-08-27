@@ -4,6 +4,7 @@ import SectionHeader from "@/components/common/SectionHeader";
 import TagInput from "@/components/common/TagInput";
 import Select from "@/components/common/Select";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { knowpostService, uploadToPresigned, computeSha256 } from "@/services/knowpostService";
 import AuthStatus from "@/features/auth/AuthStatus";
 import { useAuth } from "@/context/AuthContext";
@@ -11,6 +12,7 @@ import styles from "./CreatePage.module.css";
 
 const CreatePage = () => {
   const { user, tokens } = useAuth();
+  const navigate = useNavigate();
   const [type, setType] = useState("图文");
   const [tags, setTags] = useState<string[]>([]);
   const [title, setTitle] = useState("");
@@ -26,6 +28,8 @@ const CreatePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [postId, setPostId] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [publishSuccess, setPublishSuccess] = useState(false);
+  const [dialogError, setDialogError] = useState<string | null>(null);
 
   // 图片直传相关
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -85,15 +89,15 @@ const CreatePage = () => {
     setMessage(null);
     setError(null);
     if (!title.trim()) {
-      setError("请填写标题");
+      setDialogError("请填写标题");
       return;
     }
     if (!content.trim()) {
-      setError("请填写内容正文");
+      setDialogError("请填写内容正文");
       return;
     }
     if (summary.trim().length > 50) {
-      setError("摘要不能超过50字");
+      setDialogError("摘要不能超过50字");
       return;
     }
     setSubmitting(true);
@@ -134,7 +138,7 @@ const CreatePage = () => {
 
       // 5) 发布
       await knowpostService.publish(id);
-      setMessage("发布成功 ✅");
+      setPublishSuccess(true);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "发布失败";
       setError(msg);
@@ -349,6 +353,30 @@ const CreatePage = () => {
         {previewUrl ? (
           <div className={styles.previewOverlay} onClick={() => setPreviewUrl(null)}>
             <img src={previewUrl} className={styles.previewImage} alt="预览" />
+          </div>
+        ) : null}
+        {publishSuccess ? (
+          <div className={styles.successOverlay}>
+            <div className={styles.successDialog}>
+              <div className={styles.successIcon}>✓</div>
+              <div className={styles.successTitle}>发布成功</div>
+              <div className={styles.successText}>你的内容已成功发布</div>
+              <button type="button" className={styles.successButton} onClick={() => navigate("/")}>
+                回到首页
+              </button>
+            </div>
+          </div>
+        ) : null}
+        {dialogError ? (
+          <div className={styles.successOverlay}>
+            <div className={styles.successDialog}>
+              <div className={styles.errorIcon}>!</div>
+              <div className={styles.successTitle}>提示</div>
+              <div className={styles.successText}>{dialogError}</div>
+              <button type="button" className={styles.successButton} onClick={() => setDialogError(null)}>
+                知道了
+              </button>
+            </div>
           </div>
         ) : null}
       </div>

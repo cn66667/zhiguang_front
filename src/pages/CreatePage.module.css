@@ -235,6 +235,81 @@
   box-shadow: 0 20px 48px rgba(0,0,0,0.35);
 }
 
+.successOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.successDialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 320px;
+  padding: 40px 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #0084ff;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.errorIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #ff4b4b;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.successTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.successText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.successButton {
+  margin-top: 8px;
+  padding: 10px 36px;
+  border: none;
+  border-radius: 4px;
+  background: #0084ff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.successButton:hover {
+  background: #0066cc;
+}
+
 @media (max-width: 900px) {
   .formGrid {
     grid-template-columns: 1fr;

@@ -146,6 +146,11 @@
   color: var(--color-text-muted);
 }
 
+.fieldError {
+  font-size: 12px;
+  color: #ff4b4b;
+}
+
 .checkboxRow {
   display: flex;
   align-items: center;
