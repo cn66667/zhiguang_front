@@ -54,7 +54,7 @@ const HomePage = () => {
     <AppLayout
       header={
         <MainHeader
-          headline="知光 · 让思想有温度，让知识会发光"
+          headline="小蓝书"
           rightSlot={<AuthStatus />}
         />
       }

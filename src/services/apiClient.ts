@@ -4,6 +4,9 @@ const getBaseUrl = () => {
   return envBase?.replace(/\/$/, "") ?? "";
 };
 
+// 供 EventSource 等无法自定义 Header 的场景复用同一 baseUrl
+export const getApiBaseUrl = (): string => getBaseUrl();
+
 export type ApiFetchOptions = {
   method?: string;
   headers?: Record<string, string>;
