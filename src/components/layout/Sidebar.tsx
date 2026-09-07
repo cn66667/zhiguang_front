@@ -1,5 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { CreateIcon, HomeIcon, ProfileIcon, SearchIcon, SparkIcon, StudyIcon } from "@/components/icons/Icon";
+import { useAuth } from "@/context/AuthContext";
+import NotificationBell from "@/features/notification/NotificationBell";
 import styles from "./Sidebar.module.css";
 
 const navItems = [
@@ -11,6 +13,20 @@ const navItems = [
 ] as const;
 
 const Sidebar = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 未登录点击“我的”时拦截跳转，改为前往登录页
+  const handleNavClick = (e: React.MouseEvent, to: string) => {
+    if (to === "/profile" && !user) {
+      e.preventDefault();
+      navigate("/login", {
+        state: { from: location.pathname + location.search + location.hash }
+      });
+    }
+  };
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
@@ -23,12 +39,16 @@ const Sidebar = () => {
             to={to}
             end={to === "/"}
             className={({ isActive }) => (isActive ? `${styles.link} ${styles.linkActive}` : styles.link)}
+            onClick={(e) => handleNavClick(e, to)}
           >
             <Icon />
             {label}
           </NavLink>
         ))}
       </nav>
+      <div className={styles.notify}>
+        <NotificationBell />
+      </div>
       <div className={styles.divider} />
       <div className={styles.footer}>
         <span>知光</span>

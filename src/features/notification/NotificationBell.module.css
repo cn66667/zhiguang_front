@@ -1,0 +1,143 @@
+.bell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 14px 4px 10px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.bell svg {
+  width: 28px;
+  height: 28px;
+}
+
+.bellActive,
+.bell:hover {
+  color: var(--color-primary);
+  background: #e6f4ff;
+}
+
+.iconWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-danger, #ff4b4b);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+@media (max-width: 900px) {
+  .bell {
+    flex-direction: row;
+    gap: 10px;
+    font-size: 14px;
+    padding: 10px 16px;
+    width: auto;
+  }
+
+  .bell svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .badge {
+    top: -4px;
+    right: -8px;
+  }
+}
+
+.hintOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.hintDialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 320px;
+  padding: 32px 28px 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+}
+
+.hintTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-strong);
+}
+
+.hintText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.hintActions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.hintCancel {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ebebeb;
+  background: #ffffff;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.hintCancel:hover {
+  background: #f6f6f6;
+}
+
+.hintConfirm {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 6px;
+  border: none;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.hintConfirm:hover {
+  background: var(--color-primary-strong);
+}
